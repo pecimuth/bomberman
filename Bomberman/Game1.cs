@@ -11,6 +11,7 @@ namespace Bomberman
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Actor charactor;
         
         public Game1()
         {
@@ -39,7 +40,8 @@ namespace Bomberman
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            Texture2D texture = Content.Load<Texture2D>("characters");
+            charactor = new Actor(texture);
             // TODO: use this.Content to load your game content here
         }
 
@@ -63,7 +65,7 @@ namespace Bomberman
                 Exit();
 
             // TODO: Add your update logic here
-
+            charactor.Update(Keyboard.GetState());
             base.Update(gameTime);
         }
 
@@ -75,8 +77,9 @@ namespace Bomberman
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            Vector2 offset = new Vector2(4, 4);
             // TODO: Add your drawing code here
-
+            charactor.Draw(spriteBatch, offset);
             base.Draw(gameTime);
         }
     }
