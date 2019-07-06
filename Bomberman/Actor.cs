@@ -20,9 +20,9 @@ namespace Bomberman
             controller = new PlayerController();
         }
 
-        public void Update(KeyboardState keyboardState)
+        public void Update(KeyboardState keyboardState, Grid grid)
         {
-            controller.Update(keyboardState, sprite);
+            controller.Update(keyboardState, sprite, grid);
             sprite.Update();
         }
 

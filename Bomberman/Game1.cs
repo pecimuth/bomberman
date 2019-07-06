@@ -11,8 +11,8 @@ namespace Bomberman
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Actor charactor;
-        
+        World world;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -40,8 +40,9 @@ namespace Bomberman
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Texture2D texture = Content.Load<Texture2D>("characters");
-            charactor = new Actor(texture);
+            Texture2D texture = Content.Load<Texture2D>("atlas");
+            world = new World(texture);
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -65,7 +66,7 @@ namespace Bomberman
                 Exit();
 
             // TODO: Add your update logic here
-            charactor.Update(Keyboard.GetState());
+            world.Update(Keyboard.GetState());
             base.Update(gameTime);
         }
 
@@ -79,7 +80,7 @@ namespace Bomberman
 
             Vector2 offset = new Vector2(4, 4);
             // TODO: Add your drawing code here
-            charactor.Draw(spriteBatch, offset);
+            world.Draw(spriteBatch, offset);
             base.Draw(gameTime);
         }
     }

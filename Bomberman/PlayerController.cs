@@ -17,13 +17,21 @@ namespace Bomberman
             [Keys.Right] = Facing.East
         };
    
-        public void Update(KeyboardState keyboardState, WalkingSprite sprite)
+        public void Update(KeyboardState keyboardState, WalkingSprite sprite, Grid grid)
         {
             foreach (var pair in keyToOrientation)
             {
                 if (keyboardState.IsKeyDown(pair.Key))
                 {
-                    sprite.Walk(pair.Value);
+                    Sector destination = sprite.SectorLocation.Neighbor(pair.Value);
+                    if (grid.IsFloor(destination))
+                    {
+                        sprite.Walk(pair.Value);
+                    }
+                    else if (!sprite.Moving)
+                    {
+                        sprite.Orientation = pair.Value;
+                    }
                 }
             }
         }
