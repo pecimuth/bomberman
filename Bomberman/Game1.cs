@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.IO;
 
 namespace Bomberman
 {
@@ -41,7 +43,8 @@ namespace Bomberman
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Texture2D texture = Content.Load<Texture2D>("atlas");
-            world = new World(texture);
+            LevelLoader levelLoader = LevelLoader.FromTextFile(@"Config\levels.txt");
+            world = new World(texture, levelLoader, 1);
 
             // TODO: use this.Content to load your game content here
         }

@@ -21,15 +21,14 @@ namespace Bomberman
         public int Width { get; }
         public int Height { get; }
         private List<Block> blocks;
-        private Texture2D texture;
+        public Texture2D Texture;
         private static Vector2 textureOffset = new Vector2(0, 8 * 32);
 
-        public Grid(int width, int height, List<Block> blocks, Texture2D texture)
+        public Grid(int width, int height, List<Block> blocks)
         {
             Width = width;
             Height = height;
             this.blocks = blocks;
-            this.texture = texture;
         }
  
         public Block At(Sector sector)
@@ -79,7 +78,7 @@ namespace Bomberman
                     Point location = (sector.ToVector() + offset).ToPoint();
                     Rectangle destination = new Rectangle(location, Sector.Size.ToPoint());
                     
-                    spriteBatch.Draw(texture, destination, source, Color.White);
+                    spriteBatch.Draw(Texture, destination, source, Color.White);
                 }
             }
             spriteBatch.End();

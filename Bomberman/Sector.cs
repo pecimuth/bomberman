@@ -18,6 +18,7 @@ namespace Bomberman
     struct Sector
     {
         public readonly static Sector Zero = new Sector(0, 0);
+        public readonly static Sector One = new Sector(1, 1);
         public readonly static int Width = 32;
         public readonly static int Height = 32;
 

@@ -16,7 +16,7 @@ namespace Bomberman
 
         public Actor(Texture2D texture)
         {
-            sprite = new WalkingSprite(texture, Appearance.Heroine, Sector.Zero);
+            sprite = new WalkingSprite(texture, Appearance.Heroine, Sector.One);
             controller = new PlayerController();
         }
 
