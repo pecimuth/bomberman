@@ -11,25 +11,35 @@ namespace Bomberman
 {
     class World
     {
-        private Grid grid;
-        private Actor charactor;
+        public Grid Grid { get; private set; }
+        public Charactor Charactor { get; private set; }
+        public List<Actor> Monsters { get; private set; }
 
         public World(Texture2D texture, LevelLoader levelLoader, int levelNumber)
         {
-            charactor = new Actor(texture);
-            grid = levelLoader.MakeGrid(levelNumber);
-            grid.Texture = texture;
+            Charactor = new Charactor(texture);
+            Grid = levelLoader.MakeGrid(levelNumber);
+            Grid.Texture = texture;
+            Monsters = levelLoader.MakeMonsters(levelNumber, texture);
         }
 
         public void Update(KeyboardState keyboardState)
         {
-            charactor.Update(keyboardState, grid);
+            Charactor.Update(keyboardState, this);
+            foreach (Actor monster in Monsters)
+            {
+                monster.Update(keyboardState, this);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset)
         {
-            grid.Draw(spriteBatch, offset);
-            charactor.Draw(spriteBatch, offset);
+            Grid.Draw(spriteBatch, offset);
+            Charactor.Draw(spriteBatch, offset);
+            foreach (Actor monster in Monsters)
+            {
+                monster.Draw(spriteBatch, offset);
+            }
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Bomberman
             }
         }
 
-        public WalkingSprite(Texture2D texture, Appearance appearance, Sector location, int ticksPerSector = 20) : base(texture, appearance)
+        public WalkingSprite(Texture2D texture, Appearance appearance, Sector location, int ticksPerSector) : base(texture, appearance)
         {
             TicksPerSector = ticksPerSector;
             SectorLocation = location;

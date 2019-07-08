@@ -11,24 +11,24 @@ namespace Bomberman
 {
     class Actor
     {
-        WalkingSprite sprite;
-        PlayerController controller;
+        public WalkingSprite Sprite { get; private set; }
+        Controller controller;
 
-        public Actor(Texture2D texture)
+        public Actor(Texture2D texture, Appearance appearance, Sector startSector, int ticksPerSector, Controller controller)
         {
-            sprite = new WalkingSprite(texture, Appearance.Heroine, Sector.One);
-            controller = new PlayerController();
+            Sprite = new WalkingSprite(texture, appearance, startSector, ticksPerSector);
+            this.controller = controller;
         }
 
-        public void Update(KeyboardState keyboardState, Grid grid)
+        public void Update(KeyboardState keyboardState, World world)
         {
-            controller.Update(keyboardState, sprite, grid);
-            sprite.Update();
+            controller.Update(keyboardState, this, world);
+            Sprite.Update();
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset)
         {
-            sprite.Draw(spriteBatch, offset);
+            Sprite.Draw(spriteBatch, offset);
         }
     }
 }

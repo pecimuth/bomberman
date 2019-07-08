@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bomberman
 {
-    class PlayerController
+    class PlayerController : Controller
     {
         private static readonly Dictionary<Keys, Facing> keyToOrientation = new Dictionary<Keys, Facing>
         {
@@ -17,21 +17,15 @@ namespace Bomberman
             [Keys.Right] = Facing.East
         };
    
-        public void Update(KeyboardState keyboardState, WalkingSprite sprite, Grid grid)
+        public override void Update(KeyboardState keyboardState, Actor actor, World world)
         {
+            Grid grid = world.Grid;
+            WalkingSprite sprite = actor.Sprite;
             foreach (var pair in keyToOrientation)
             {
                 if (keyboardState.IsKeyDown(pair.Key))
                 {
-                    Sector destination = sprite.SectorLocation.Neighbor(pair.Value);
-                    if (grid.IsFloor(destination))
-                    {
-                        sprite.Walk(pair.Value);
-                    }
-                    else if (!sprite.Moving)
-                    {
-                        sprite.Orientation = pair.Value;
-                    }
+                    MaybeWalk(world.Grid, actor.Sprite, pair.Value);
                 }
             }
         }
