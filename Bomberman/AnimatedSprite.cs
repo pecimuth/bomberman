@@ -74,7 +74,7 @@ namespace Bomberman
             animationFrame = standstillFrame;
         }
 
-        private Rectangle MakeSourceRectage()
+        private Rectangle MakeSourceRectangle()
         {
             Vector2 alpha = new Vector2(animationFrame, (float)Orientation);
             Vector2 frameLocation = PointOfOrigin + alpha * Size;
@@ -105,7 +105,7 @@ namespace Bomberman
 
         public void Draw(SpriteBatch spriteBatch, Vector2 location)
         {
-            Rectangle source = MakeSourceRectage();
+            Rectangle source = MakeSourceRectangle();
             Rectangle destination = new Rectangle(location.ToPoint(), Size.ToPoint());
             spriteBatch.Begin();
             spriteBatch.Draw(Texture, destination, source, Color.White);

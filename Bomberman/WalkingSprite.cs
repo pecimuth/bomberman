@@ -10,17 +10,26 @@ namespace Bomberman
 {
     class WalkingSprite : AnimatedSprite
     {
-        private Sector destinationSector;
         private int ticksElapsed = 0;
         public int TicksPerSector { get; }
 
+        public Sector DestinationSector { get; private set; }
         public Sector SectorLocation { get; private set; }
 
         public Vector2 Location
         {
             get
             {
-                return SectorLocation.ToVector() + (destinationSector.ToVector() - SectorLocation.ToVector()) * ticksElapsed / TicksPerSector; 
+                return SectorLocation.ToVector() + (DestinationSector.ToVector() - SectorLocation.ToVector()) * ticksElapsed / TicksPerSector; 
+            }
+        }
+
+        public Sector SectorLocationByCentralPoint
+        {
+            get
+            {
+                Vector2 centralPoint = Location + Size / 2;
+                return Sector.FromVector(centralPoint);
             }
         }
 
@@ -28,18 +37,18 @@ namespace Bomberman
         {
             TicksPerSector = ticksPerSector;
             SectorLocation = location;
-            destinationSector = location;
+            DestinationSector = location;
         }
 
         public new void Update()
         {
-            if (SectorLocation != destinationSector)
+            if (SectorLocation != DestinationSector)
             {
                 ++ticksElapsed;
                 if (ticksElapsed == TicksPerSector)
                 {
                     ticksElapsed = 0;
-                    SectorLocation = destinationSector;
+                    SectorLocation = DestinationSector;
 
                     if (AtDestination())
                     {
@@ -71,20 +80,20 @@ namespace Bomberman
 
         public bool AtDestination()
         {
-            return SectorLocation == destinationSector;
+            return SectorLocation == DestinationSector;
         }
 
         private void PlanImmediateDestination(Facing facing)
         {
             Sector destination = SectorLocation.Neighbor(facing);
-            destinationSector = destination;
+            DestinationSector = destination;
             Orientation = facing;
         }
 
         private void TurnBack(Facing facing)
         {
-            Sector tempDestination = destinationSector;
-            destinationSector = SectorLocation;
+            Sector tempDestination = DestinationSector;
+            DestinationSector = SectorLocation;
             SectorLocation = tempDestination;
             ticksElapsed = TicksPerSector - ticksElapsed;
             Orientation = facing;

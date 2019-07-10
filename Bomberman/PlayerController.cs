@@ -16,7 +16,9 @@ namespace Bomberman
             [Keys.Left] = Facing.West,
             [Keys.Right] = Facing.East
         };
-   
+
+        private bool spaceKeyWasDown = false;
+ 
         public override void Update(KeyboardState keyboardState, Actor actor, World world)
         {
             Grid grid = world.Grid;
@@ -25,8 +27,31 @@ namespace Bomberman
             {
                 if (keyboardState.IsKeyDown(pair.Key))
                 {
-                    MaybeWalk(world.Grid, actor.Sprite, pair.Value);
+                    MaybeWalk(world, actor.Sprite, pair.Value);
                 }
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Space))
+            {
+                if (!spaceKeyWasDown)
+                {
+                    MaybePlaceBomb(actor, world);
+                }
+
+                spaceKeyWasDown = true;
+            }
+            else
+            {
+                spaceKeyWasDown = false;
+            }
+        }
+
+        private void MaybePlaceBomb(Actor actor, World world)
+        {
+            Sector destination = actor.Sprite.SectorLocationByCentralPoint;
+            if (!ContainsMovementRestrictingEffect(destination, world))
+            {
+                world.SpawnBomb(actor.Sprite.SectorLocation);
             }
         }
     }

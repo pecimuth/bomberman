@@ -44,8 +44,11 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="AnimatedSprite.cs" />
+    <Compile Include="Bomb.cs" />
     <Compile Include="Charactor.cs" />
     <Compile Include="ChaseCharactorController.cs" />
+    <Compile Include="Effect.cs" />
+    <Compile Include="Explosion.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="Controller.cs" />

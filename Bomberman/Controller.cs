@@ -13,9 +13,9 @@ namespace Bomberman
 
         public abstract void Update(KeyboardState keyboardState, Actor actor, World world);
 
-        protected bool MaybeWalk(Grid grid, WalkingSprite sprite, Facing facing)
+        protected bool MaybeWalk(World world, WalkingSprite sprite, Facing facing)
         {
-            if (IsNeighborFloor(grid, sprite.SectorLocation, facing))
+            if (IsNeighborFloor(world, sprite.SectorLocation, facing))
             {
                 sprite.Walk(facing);
                 return true;
@@ -28,20 +28,29 @@ namespace Bomberman
             return false;
         }
 
-        protected bool IsNeighborFloor(Grid grid, Sector sector, Facing facing)
+        protected bool IsNeighborFloor(World world, Sector sector, Facing facing)
         {
             Sector destination = sector.Neighbor(facing);
-            return grid.IsFloor(destination);
+
+            return world.Grid.IsFloor(destination) && !ContainsMovementRestrictingEffect(destination, world);
         }
 
-        protected bool WalkForwardOrTurnLeft(WalkingSprite sprite, Grid grid)
+        protected bool ContainsMovementRestrictingEffect(Sector sector, World world)
+        {
+            return world
+                .Effects
+                .FindAll((Effect effect) => effect.Location == sector)
+                .Exists((Effect effect) => effect.RestrictActorMovement);
+        }
+
+        protected bool WalkForwardOrTurnLeft(WalkingSprite sprite, World world)
         {
             int forwardOrientationIndex = Array.IndexOf(orientationsCounterClockwise, sprite.Orientation);
             for (int orientationIter = 0; orientationIter < 4; ++orientationIter)
             {
                 int index = (orientationIter + forwardOrientationIndex) % 4;
                 Facing facing = orientationsCounterClockwise[index];
-                if (MaybeWalk(grid, sprite, facing))
+                if (MaybeWalk(world, sprite, facing))
                 {
                     return orientationIter == 0;
                 }
@@ -59,6 +68,19 @@ namespace Bomberman
             }
 
             return orientationsCounterClockwise[orientationIndex];
+        }
+
+        protected Facing Rotate180(Facing facing)
+        {
+            return RotateRight(RotateRight(facing));
+        }
+
+        protected void TurnBackIfWalkingTowardsObstacle(WalkingSprite sprite, World world)
+        {
+            if (sprite.Moving && ContainsMovementRestrictingEffect(sprite.DestinationSector, world))
+            {
+                MaybeWalk(world, sprite, Rotate180(sprite.Orientation));
+            }
         }
     }
 }

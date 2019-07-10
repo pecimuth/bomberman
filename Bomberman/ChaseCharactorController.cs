@@ -12,7 +12,10 @@ namespace Bomberman
         public override void Update(KeyboardState keyboardState, Actor actor, World world)
         {
             if (actor.Sprite.Moving)
+            {
+                TurnBackIfWalkingTowardsObstacle(actor.Sprite, world);
                 return;
+            }
 
             Sector charactorLocation = world.Charactor.Sprite.SectorLocation;
             Sector myLocation = actor.Sprite.SectorLocation;
@@ -21,11 +24,11 @@ namespace Bomberman
             {
                 if (IsInLineOfSight(myLocation, charactorLocation, world.Grid, out Facing nextStep))
                 {
-                    MaybeWalk(world.Grid, actor.Sprite, nextStep);
+                    MaybeWalk(world, actor.Sprite, nextStep);
                 }
                 else
                 {
-                    WalkForwardOrTurnLeft(actor.Sprite, world.Grid);
+                    WalkForwardOrTurnLeft(actor.Sprite, world);
                 }
             }
         }
