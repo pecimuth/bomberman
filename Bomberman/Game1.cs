@@ -11,9 +11,26 @@ namespace Bomberman
     /// </summary>
     public class Game1 : Game
     {
+        private static readonly float moonScrollCoefficient = 1 / 3f;
+        private static readonly float bgScrollCoefficient = 1 / 4f;
+        private static readonly Point moonSize = new Point(32, 32);
+        private static readonly Point moonOrigin = new Point(416, 0);
+        private static readonly Vector2 moonOffset = new Vector2(450, 70);
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D backgroundTexture;
+        Texture2D atlasTexture;
         World world;
+        StatusBar statusBar;
+
+        Vector2 Viewport
+        {
+            get
+            {
+                return new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            }
+        }
 
         public Game1()
         {
@@ -42,9 +59,11 @@ namespace Bomberman
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Texture2D texture = Content.Load<Texture2D>("atlas");
+            backgroundTexture = Content.Load<Texture2D>("stars");
+            atlasTexture = Content.Load<Texture2D>("atlas");
             LevelLoader levelLoader = LevelLoader.FromTextFile(@"Config\levels.txt");
-            world = new World(texture, levelLoader, 1);
+            world = new World(atlasTexture, levelLoader, 1);
+            statusBar = new StatusBar(atlasTexture);
 
             // TODO: use this.Content to load your game content here
         }
@@ -70,6 +89,7 @@ namespace Bomberman
 
             // TODO: Add your update logic here
             world.Update(Keyboard.GetState());
+            statusBar.Update(world);
             base.Update(gameTime);
         }
 
@@ -79,12 +99,33 @@ namespace Bomberman
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            Vector2 offset = new Vector2(4, 4);
-            // TODO: Add your drawing code here
-            world.Draw(spriteBatch, offset);
+            DrawBackground();
+            world.Draw(spriteBatch, MakeOffsetToCenterCharactor());
+            statusBar.Draw(spriteBatch);
+
             base.Draw(gameTime);
+        }
+
+        private Vector2 MakeOffsetToCenterCharactor()
+        {
+            return (Viewport - AnimatedSprite.Size) / 2 - world.Charactor.Sprite.Location;
+        }
+
+        private void DrawBackground()
+        {
+            Vector2 scrollVector = MakeOffsetToCenterCharactor() * bgScrollCoefficient;
+            Rectangle source = new Rectangle(scrollVector.ToPoint(), Viewport.ToPoint());
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
+            spriteBatch.Draw(backgroundTexture, Vector2.Zero, source, Color.White);
+            spriteBatch.End();
+
+            Vector2 moonScrollVector = MakeOffsetToCenterCharactor() * moonScrollCoefficient;
+            Rectangle moonSource = new Rectangle(moonOrigin, moonSize);
+            Rectangle moonDestination = new Rectangle((moonScrollVector + moonOffset).ToPoint(), moonSize);
+            spriteBatch.Begin();
+            spriteBatch.Draw(atlasTexture, moonDestination, moonSource, Color.White);
+            spriteBatch.End();
         }
     }
 }

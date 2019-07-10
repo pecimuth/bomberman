@@ -29,11 +29,13 @@ namespace Bomberman
 
         protected override void OnTimeRanOut(World world)
         {
+            ++world.Charactor.BombsAvailable;
             world.SpawnExplosion(Location, ExplosionOrientation.Central, false);
             ExplosionsInDirection(0, -1, ExplosionOrientation.Vertical, world);
             ExplosionsInDirection(0, 1, ExplosionOrientation.Vertical, world);
             ExplosionsInDirection(-1, 0, ExplosionOrientation.Horizontal, world);
             ExplosionsInDirection(1, 0, ExplosionOrientation.Horizontal, world);
+            Remove();
         }
 
         private void ExplosionsInDirection(int deltaX, int deltaY, ExplosionOrientation orientation, World world)

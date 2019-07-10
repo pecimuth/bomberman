@@ -72,9 +72,9 @@ namespace Bomberman
             
         }
 
-        public new void Draw(SpriteBatch spriteBatch, Vector2 offset)
+        public new void Draw(SpriteBatch spriteBatch, Vector2 offset, bool semiTransparent)
         {
-            base.Draw(spriteBatch, Location + offset);
+            base.Draw(spriteBatch, Location + offset, semiTransparent);
         }
 
         public bool AtDestination()

@@ -27,24 +27,10 @@ namespace Bomberman
         public Appearance Appearance { get; }
         public readonly static Vector2 Size = new Vector2(32, 32);
 
-        private bool moving = false;
-        public bool Moving
-        {
-            get
-            {
-                return moving;
-            }
-            set
-            {
-                moving = value;
-                if (!Moving)
-                {
-                    ResetAnimation();
-                }
-            }
-        }
+        private bool previouslyMoving;
+        public bool Moving { get; set; }
  
-        private readonly int ticksPerAnimationFrame = 10;
+        private readonly int ticksPerAnimationFrame = 8;
         private int tickCounter;
 
         private readonly int totalAnimationFrames = 3;
@@ -92,6 +78,13 @@ namespace Bomberman
                     NextMovementFrame();
                 }
             }
+
+            if (!Moving && !previouslyMoving)
+            {
+                ResetAnimation();
+            }
+
+            previouslyMoving = Moving;
         }
 
         private void NextMovementFrame()
@@ -103,12 +96,13 @@ namespace Bomberman
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 location)
+        public void Draw(SpriteBatch spriteBatch, Vector2 location, bool semiTransparent)
         {
             Rectangle source = MakeSourceRectangle();
             Rectangle destination = new Rectangle(location.ToPoint(), Size.ToPoint());
-            spriteBatch.Begin();
-            spriteBatch.Draw(Texture, destination, source, Color.White);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            Color color = (semiTransparent) ? Color.White * 0.7f : Color.White;
+            spriteBatch.Draw(Texture, destination, source, color);
             spriteBatch.End();
         }
     }

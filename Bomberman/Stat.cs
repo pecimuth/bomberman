@@ -34,5 +34,10 @@ namespace Bomberman
             Value -= Increment;
             Value = Math.Max(MinValue, Value);
         }
+
+        public void Reset()
+        {
+            Value = BaseValue;
+        }
     }
 }

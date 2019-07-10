@@ -17,7 +17,7 @@ namespace Bomberman
 
     class Explosion : Effect
     {
-        private static readonly int ticksLeft = 30;
+        private static readonly int ticksLeft = 20;
         private static readonly Vector2 originVector = new Vector2(32, 288);
         private readonly bool brokeBrick;
 
@@ -56,6 +56,7 @@ namespace Bomberman
             {
                 world.MaybeSpawnRandomPickup(Location);
             }
+            Remove();
         }
     }
 }

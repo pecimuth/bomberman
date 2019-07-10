@@ -18,7 +18,7 @@ namespace Bomberman
         private List<Effect> waitingEffects;
         private readonly Texture2D texture;
         private readonly Random random;
-        private static readonly int inversePickupSpawnProbability = 2;
+        private static readonly int inversePickupSpawnProbability = 5;
 
         public World(Texture2D texture, LevelLoader levelLoader, int levelNumber)
         {
@@ -28,6 +28,7 @@ namespace Bomberman
             Grid.Texture = texture;
             Monsters = levelLoader.MakeMonsters(levelNumber, texture);
             Effects = new List<Effect>();
+            Effects.Add(levelLoader.MakeFinish(levelNumber, texture));
             waitingEffects = new List<Effect>();
             random = new Random();
         }
@@ -41,6 +42,12 @@ namespace Bomberman
             {
                 monster.Update(keyboardState, this);
             }
+
+            MonstersInSector(Charactor.Sprite.SectorLocationByCentralPoint)
+                .ForEach((Actor monster) => {
+                    monster.Damage();
+                    Charactor.Damage();
+                });
 
             Effects.RemoveAll((Effect effect) => effect.MarkedForRemoval);
             foreach (Effect effect in Effects)

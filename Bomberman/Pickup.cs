@@ -26,7 +26,7 @@ namespace Bomberman
                 texture
                 , false
                 , location
-                , 100000
+                , 0
                 , GetPointOfOrigin(pickupType)
             )
         {

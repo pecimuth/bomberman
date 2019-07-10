@@ -46,13 +46,14 @@ namespace Bomberman
 
     struct ParsedLevel
     {
-        public ParsedLevel(int number, int gridWidth, int gridHeight, List<Block> blocks, List<ParsedMonster> monsters)
+        public ParsedLevel(int number, int gridWidth, int gridHeight, List<Block> blocks, List<ParsedMonster> monsters, Sector finishSector)
         {
             Number = number;
             GridWidth = gridWidth;
             GridHeight = gridHeight;
             Blocks = blocks;
             Monsters = monsters;
+            FinishSector = finishSector;
         }
 
         public int Number { get; }
@@ -60,6 +61,7 @@ namespace Bomberman
         public int GridHeight { get;  }
         public List<Block> Blocks { get; }
         public List<ParsedMonster> Monsters { get; }
+        public Sector FinishSector { get; }
     }
 
     class LevelLoader
@@ -110,6 +112,10 @@ namespace Bomberman
                 }
             }
 
+            LineShouldExistAndMatch(lines, ++lineNo, @"^FINISH [0-9]{1,9} [0-9]{1,9}$");
+            lineSplit = lines[lineNo].Split(null);
+            Sector finishSector = new Sector(int.Parse(lineSplit[1]), int.Parse(lineSplit[2]));
+ 
             LineShouldExistAndMatch(lines, ++lineNo, @"^MONSTERS [0-9]{1,9}$");
             lineSplit = lines[lineNo].Split(null);
             int monsterCount = int.Parse(lineSplit[1]);
@@ -148,7 +154,7 @@ namespace Bomberman
                 monsters.Add(parsedMonster);
             }
 
-            return new ParsedLevel(number, width, height, blocks, monsters);
+            return new ParsedLevel(number, width, height, blocks, monsters, finishSector);
         }
 
         private static void LineShouldExistAndMatch(string[] lines, int lineArrayIndex, string pattern)
@@ -211,6 +217,18 @@ namespace Bomberman
             }
 
             return monsterActors;
+        }
+
+        public Finish MakeFinish(int levelNumber, Texture2D texture)
+        {
+            if (!levels.ContainsKey(levelNumber))
+            {
+                throw new ArgumentException(string.Format("Tried to create finish for level {0:d}, but it was not parsed.", levelNumber));
+            }
+
+            ParsedLevel level = levels[levelNumber];
+            Finish finish = new Finish(texture, level.FinishSector);
+            return finish;
         }
     }
 }

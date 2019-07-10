@@ -49,6 +49,7 @@
     <Compile Include="ChaseCharactorController.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="Explosion.cs" />
+    <Compile Include="Finish.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="Controller.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Skeleton.cs" />
     <Compile Include="Spider.cs" />
     <Compile Include="Stat.cs" />
+    <Compile Include="StatusBar.cs" />
     <Compile Include="WalkByWallsController.cs" />
     <Compile Include="WalkingSprite.cs" />
     <Compile Include="World.cs" />

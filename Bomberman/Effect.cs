@@ -34,7 +34,6 @@ namespace Bomberman
             if (TicksLeft < 0)
             {
                 OnTimeRanOut(world);
-                Remove();
             }
 
             if (world.Charactor.Sprite.SectorLocationByCentralPoint == Location)
