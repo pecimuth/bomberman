@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bomberman
 {
-    class Effect
+    abstract class Effect
     {
         public readonly static Vector2 Size = new Vector2(32, 32);
         public bool MarkedForRemoval { get; private set; }
@@ -17,12 +17,6 @@ namespace Bomberman
         protected Texture2D Texture { get; private set; }
         public int TicksLeft { get; private set; }
         private readonly Point pointOfOrigin;
-
-        public delegate void ActorCollisionCallback(Actor actor, Effect effect, World world);
-        public ActorCollisionCallback OnActorCollision;
- 
-        public delegate void BeforeRemovalCallback(Effect effect, World world);
-        public BeforeRemovalCallback OnBeforeRemoval;
 
         public Effect(Texture2D texture, bool restrictActorMovement, Sector location, int ticksLeft, Point pointOfOrigin)
         {
@@ -34,20 +28,35 @@ namespace Bomberman
             this.pointOfOrigin = pointOfOrigin;
         }
 
-        public void Remove()
-        {
-            MarkedForRemoval = true;
-        }
-
         public virtual void Update(World world)
         {
             --TicksLeft;
             if (TicksLeft < 0)
             {
-                OnBeforeRemoval?.Invoke(this, world);
+                OnTimeRanOut(world);
                 Remove();
             }
+
+            if (world.Charactor.Sprite.SectorLocationByCentralPoint == Location)
+            {
+                OnCharactorCollision(world.Charactor, world);
+            }
+
+            world
+                .MonstersInSector(Location)
+                .ForEach((Actor monster) => OnMonsterCollision(monster, world));
         }
+
+        public void Remove()
+        {
+            MarkedForRemoval = true;
+        }
+
+        protected abstract void OnTimeRanOut(World world);
+
+        protected abstract void OnCharactorCollision(Charactor charactor, World world);
+
+        protected abstract void OnMonsterCollision(Actor monster, World world);
 
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 offset)
         {

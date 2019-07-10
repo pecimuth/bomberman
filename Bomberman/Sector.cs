@@ -41,7 +41,7 @@ namespace Bomberman
 
         public static Sector FromVector(Vector2 vector)
         {
-            return new Sector((int)vector.X % Width, (int)vector.Y % Height);
+            return new Sector((int)vector.X / Width, (int)vector.Y / Height);
         }
 
         public Vector2 ToVector()

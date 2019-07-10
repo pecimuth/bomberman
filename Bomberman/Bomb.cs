@@ -15,27 +15,25 @@ namespace Bomberman
 
         public int ExplosionRadius { get; private set; }
 
-        public Bomb(Texture2D texture, Sector location) :
+        public Bomb(Texture2D texture, Sector location, int explosionRadius) :
             base(
                  texture
-                ,true
-                ,location
-                ,ticksUntilExplosion
-                ,topLeftCornerInTextureAtlas
+                , true
+                , location
+                , ticksUntilExplosion
+                , topLeftCornerInTextureAtlas
            )
         {
-            ExplosionRadius = 2;
-            OnBeforeRemoval += Explode;
+            ExplosionRadius = explosionRadius;
         }
-        
-        private void Explode(Effect bomb, World world)
+
+        protected override void OnTimeRanOut(World world)
         {
-            world.SpawnExplosion(bomb.Location, ExplosionOrientation.Central);
+            world.SpawnExplosion(Location, ExplosionOrientation.Central, false);
             ExplosionsInDirection(0, -1, ExplosionOrientation.Vertical, world);
             ExplosionsInDirection(0, 1, ExplosionOrientation.Vertical, world);
             ExplosionsInDirection(-1, 0, ExplosionOrientation.Horizontal, world);
             ExplosionsInDirection(1, 0, ExplosionOrientation.Horizontal, world);
-
         }
 
         private void ExplosionsInDirection(int deltaX, int deltaY, ExplosionOrientation orientation, World world)
@@ -47,11 +45,11 @@ namespace Bomberman
                 switch (world.Grid.At(sector))
                 {
                     case Block.Floor:
-                        world.SpawnExplosion(sector, orientation);
+                        world.SpawnExplosion(sector, orientation, false);
                         break;
-  
+
                     case Block.Brick:
-                        world.SpawnExplosion(sector, orientation);
+                        world.SpawnExplosion(sector, orientation, true);
                         world.Grid.Break(sector);
                         return;
 
@@ -60,5 +58,11 @@ namespace Bomberman
                 }
             }
         }
+
+        protected override void OnCharactorCollision(Charactor charactor, World world)
+        { }
+
+        protected override void OnMonsterCollision(Actor monster, World world)
+        { }
     }
 }

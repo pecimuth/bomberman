@@ -13,22 +13,29 @@ namespace Bomberman
     {
         public WalkingSprite Sprite { get; private set; }
         Controller controller;
+        public Stat Health { get; private set; }
 
         public Actor(Texture2D texture, Appearance appearance, Sector startSector, int ticksPerSector, Controller controller)
         {
             Sprite = new WalkingSprite(texture, appearance, startSector, ticksPerSector);
+            Health = new Stat(1, 1, 0, 3);
             this.controller = controller;
         }
 
-        public void Update(KeyboardState keyboardState, World world)
+        public virtual void Update(KeyboardState keyboardState, World world)
         {
-            controller.Update(keyboardState, this, world);
             Sprite.Update();
+            controller.Update(keyboardState, this, world);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset)
         {
             Sprite.Draw(spriteBatch, offset);
+        }
+
+        public void Damage()
+        {
+            Health.Decrease();
         }
     }
 }

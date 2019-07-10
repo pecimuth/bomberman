@@ -17,6 +17,8 @@ namespace Bomberman
         public List<Effect> Effects { get; private set; }
         private List<Effect> waitingEffects;
         private readonly Texture2D texture;
+        private readonly Random random;
+        private static readonly int inversePickupSpawnProbability = 2;
 
         public World(Texture2D texture, LevelLoader levelLoader, int levelNumber)
         {
@@ -27,11 +29,14 @@ namespace Bomberman
             Monsters = levelLoader.MakeMonsters(levelNumber, texture);
             Effects = new List<Effect>();
             waitingEffects = new List<Effect>();
+            random = new Random();
         }
 
         public void Update(KeyboardState keyboardState)
         {
             Charactor.Update(keyboardState, this);
+
+            Monsters.RemoveAll((Actor monster) => monster.Health.Value == 0);
             foreach (Actor monster in Monsters)
             {
                 monster.Update(keyboardState, this);
@@ -60,16 +65,38 @@ namespace Bomberman
             }
         }
 
+        public void MaybeSpawnRandomPickup(Sector location)
+        {
+            if (Grid.IsFloor(location) && random.Next(inversePickupSpawnProbability) == 0)
+            {
+                SpawnRandomPickup(location);
+            }
+        }
+
+        private void SpawnRandomPickup(Sector location)
+        {
+            Array types = Enum.GetValues(typeof(PickupType));
+            PickupType pickupType = (PickupType)types.GetValue(random.Next(types.Length));
+            Pickup pickup = new Pickup(texture, location, pickupType);
+            waitingEffects.Add(pickup);
+        }
+
         public void SpawnBomb(Sector location)
         {
-            Bomb bomb = new Bomb(texture, location);
+            Bomb bomb = new Bomb(texture, location, Charactor.BombRadius.Value);
             waitingEffects.Add(bomb);
         }
 
-        public void SpawnExplosion(Sector location, ExplosionOrientation orientation)
+        public void SpawnExplosion(Sector location, ExplosionOrientation orientation, bool brokeBrick)
         {
-            Explosion explosion = new Explosion(texture, location, orientation);
+            Explosion explosion = new Explosion(texture, location, orientation, brokeBrick);
             waitingEffects.Add(explosion);
+        }
+
+        public List<Actor> MonstersInSector(Sector sector)
+        {
+            return Monsters
+                .FindAll((Actor monster) => monster.Sprite.SectorLocationByCentralPoint == sector);
         }
     }
 }

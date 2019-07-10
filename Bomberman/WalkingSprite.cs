@@ -11,8 +11,7 @@ namespace Bomberman
     class WalkingSprite : AnimatedSprite
     {
         private int ticksElapsed = 0;
-        public int TicksPerSector { get; }
-
+        public Stat MovementSpeed { get; private set; }
         public Sector DestinationSector { get; private set; }
         public Sector SectorLocation { get; private set; }
 
@@ -20,7 +19,7 @@ namespace Bomberman
         {
             get
             {
-                return SectorLocation.ToVector() + (DestinationSector.ToVector() - SectorLocation.ToVector()) * ticksElapsed / TicksPerSector; 
+                return SectorLocation.ToVector() + (DestinationSector.ToVector() - SectorLocation.ToVector()) * ticksElapsed / MovementSpeed.Value; 
             }
         }
 
@@ -35,7 +34,7 @@ namespace Bomberman
 
         public WalkingSprite(Texture2D texture, Appearance appearance, Sector location, int ticksPerSector) : base(texture, appearance)
         {
-            TicksPerSector = ticksPerSector;
+            MovementSpeed = new Stat(ticksPerSector, 3, 14, 100);
             SectorLocation = location;
             DestinationSector = location;
         }
@@ -45,7 +44,7 @@ namespace Bomberman
             if (SectorLocation != DestinationSector)
             {
                 ++ticksElapsed;
-                if (ticksElapsed == TicksPerSector)
+                if (ticksElapsed >= MovementSpeed.Value)
                 {
                     ticksElapsed = 0;
                     SectorLocation = DestinationSector;
@@ -95,13 +94,13 @@ namespace Bomberman
             Sector tempDestination = DestinationSector;
             DestinationSector = SectorLocation;
             SectorLocation = tempDestination;
-            ticksElapsed = TicksPerSector - ticksElapsed;
+            ticksElapsed = MovementSpeed.Value - ticksElapsed;
             Orientation = facing;
         }
 
         private bool CloserToOrigin()
         {
-            return ticksElapsed / TicksPerSector < 0.5;
+            return ticksElapsed / MovementSpeed.Value < 0.5;
         }
 
         private static bool IsOppositeOrientation(Facing f1, Facing f2)

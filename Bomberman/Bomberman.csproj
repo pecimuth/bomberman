@@ -53,12 +53,14 @@
     <Compile Include="Grid.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="LevelLoader.cs" />
+    <Compile Include="Pickup.cs" />
     <Compile Include="PlayerController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sector.cs" />
     <Compile Include="Skeleton.cs" />
     <Compile Include="Spider.cs" />
+    <Compile Include="Stat.cs" />
     <Compile Include="WalkByWallsController.cs" />
     <Compile Include="WalkingSprite.cs" />
     <Compile Include="World.cs" />

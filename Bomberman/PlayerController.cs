@@ -48,10 +48,14 @@ namespace Bomberman
 
         private void MaybePlaceBomb(Actor actor, World world)
         {
-            Sector destination = actor.Sprite.SectorLocationByCentralPoint;
-            if (!ContainsMovementRestrictingEffect(destination, world))
+            if (actor == world.Charactor && world.Charactor.BombsAvailable > 0)
             {
-                world.SpawnBomb(actor.Sprite.SectorLocation);
+                --world.Charactor.BombsAvailable;
+                Sector destination = actor.Sprite.SectorLocationByCentralPoint;
+                if (!ContainsMovementRestrictingEffect(destination, world))
+                {
+                    world.SpawnBomb(destination);
+                }
             }
         }
     }
