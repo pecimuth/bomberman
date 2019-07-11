@@ -50,11 +50,11 @@ namespace Bomberman
         {
             if (actor == world.Charactor && world.Charactor.BombsAvailable > 0)
             {
-                --world.Charactor.BombsAvailable;
                 Sector destination = actor.Sprite.SectorLocationByCentralPoint;
                 if (!ContainsMovementRestrictingEffect(destination, world))
                 {
                     world.SpawnBomb(destination);
+                    --world.Charactor.BombsAvailable;
                 }
             }
         }

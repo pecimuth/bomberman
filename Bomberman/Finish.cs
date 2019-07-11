@@ -22,7 +22,12 @@ namespace Bomberman
         { }
 
         protected override void OnCharactorCollision(Charactor charactor, World world)
-        { }
+        {
+            if (charactor.Health.Value > charactor.Health.MinValue && world.LevelState == LevelState.InProgress)
+            {
+                world.LevelState = LevelState.Completed;
+            }
+        }
 
         protected override void OnMonsterCollision(Actor monster, World world)
         { }

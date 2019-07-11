@@ -28,11 +28,21 @@ namespace Bomberman
             }
         }
 
-        public Charactor(Texture2D texture) : base(texture, Appearance.Heroine, Sector.One, 23, new PlayerController(), 3)
+        public Charactor(Texture2D texture, Sector startSector) : base(texture, Appearance.Heroine, startSector, 23, new PlayerController(), 3)
         {
             BombRadius = new Stat(1, 1, 1, 6);
             BombsCapacity = new Stat(1, 1, 1, 6);
             bombsAvailable = BombsCapacity.BaseValue;
+        }
+
+        public override void Damage(World world)
+        {
+            base.Damage(world);
+
+            if (Health.Value == Health.MinValue && world.LevelState == LevelState.InProgress)
+            {
+                world.LevelState = LevelState.Failed;
+            }
         }
     }
 }

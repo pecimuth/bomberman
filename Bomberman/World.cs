@@ -9,12 +9,21 @@ using System.Threading.Tasks;
 
 namespace Bomberman
 {
+    enum LevelState
+    {
+        InProgress,
+        Completed,
+        Failed
+    }
+
     class World
     {
         public Grid Grid { get; private set; }
         public Charactor Charactor { get; private set; }
         public List<Actor> Monsters { get; private set; }
         public List<Effect> Effects { get; private set; }
+        public LevelState LevelState;
+        public readonly int LevelNumber;
         private List<Effect> waitingEffects;
         private readonly Texture2D texture;
         private readonly Random random;
@@ -23,14 +32,16 @@ namespace Bomberman
         public World(Texture2D texture, LevelLoader levelLoader, int levelNumber)
         {
             this.texture = texture;
-            Charactor = new Charactor(texture);
-            Grid = levelLoader.MakeGrid(levelNumber);
+            Charactor = levelLoader.MakeCharactor(levelNumber, texture);
+            Grid = levelLoader.GetGrid(levelNumber);
             Grid.Texture = texture;
             Monsters = levelLoader.MakeMonsters(levelNumber, texture);
             Effects = new List<Effect>();
             Effects.Add(levelLoader.MakeFinish(levelNumber, texture));
             waitingEffects = new List<Effect>();
             random = new Random();
+            LevelState = LevelState.InProgress;
+            LevelNumber = levelNumber;
         }
 
         public void Update(KeyboardState keyboardState)
@@ -45,8 +56,8 @@ namespace Bomberman
 
             MonstersInSector(Charactor.Sprite.SectorLocationByCentralPoint)
                 .ForEach((Actor monster) => {
-                    monster.Damage();
-                    Charactor.Damage();
+                    monster.Damage(this);
+                    Charactor.Damage(this);
                 });
 
             Effects.RemoveAll((Effect effect) => effect.MarkedForRemoval);

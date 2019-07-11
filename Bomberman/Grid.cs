@@ -74,6 +74,12 @@ namespace Bomberman
                 {
                     Sector sector = new Sector(x, y);
                     Block block = At(sector);
+
+                    if (block == Block.None)
+                    {
+                        continue;
+                    }
+
                     Rectangle source = MakeSourceRectangle(block);
                     Point location = (sector.ToVector() + offset).ToPoint();
                     Rectangle destination = new Rectangle(location, Sector.Size.ToPoint());

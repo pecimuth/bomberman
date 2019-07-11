@@ -42,12 +42,12 @@ namespace Bomberman
 
         protected override void OnCharactorCollision(Charactor charactor, World world)
         {
-            charactor.Damage();
+            charactor.Damage(world);
         }
 
         protected override void OnMonsterCollision(Actor monster, World world)
         {
-            monster.Damage();
+            monster.Damage(world);
         }
 
         protected override void OnTimeRanOut(World world)

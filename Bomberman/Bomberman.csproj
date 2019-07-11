@@ -44,9 +44,11 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="AnimatedSprite.cs" />
+    <Compile Include="Background.cs" />
     <Compile Include="Bomb.cs" />
     <Compile Include="Charactor.cs" />
     <Compile Include="ChaseCharactorController.cs" />
+    <Compile Include="ConfigReader.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="Explosion.cs" />
     <Compile Include="Finish.cs" />
@@ -54,6 +56,8 @@
     <Compile Include="Grid.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="LevelLoader.cs" />
+    <Compile Include="ParsedLevel.cs" />
+    <Compile Include="ParsedMonsters.cs" />
     <Compile Include="Pickup.cs" />
     <Compile Include="PlayerController.cs" />
     <Compile Include="Program.cs" />
@@ -63,6 +67,7 @@
     <Compile Include="Spider.cs" />
     <Compile Include="Stat.cs" />
     <Compile Include="StatusBar.cs" />
+    <Compile Include="Texts.cs" />
     <Compile Include="WalkByWallsController.cs" />
     <Compile Include="WalkingSprite.cs" />
     <Compile Include="World.cs" />

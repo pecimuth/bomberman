@@ -37,7 +37,7 @@ namespace Bomberman
             Sprite.Draw(spriteBatch, offset, semiTransparent);
         }
 
-        public void Damage()
+        public virtual void Damage(World world)
         {
             if (InvicibilityRemaining.Value == InvicibilityRemaining.MinValue)
             {

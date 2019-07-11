@@ -8,62 +8,6 @@ using System.Threading.Tasks;
 
 namespace Bomberman
 {
-    class LevelParserException : Exception
-    {
-        public LevelParserException(int line, string expected, string found) :
-            base(
-                 string.Format(
-                                 "Parser error on line {0:d}\nExpected: {1}\nFound: {2}\n"
-                                ,line
-                                ,expected
-                                ,found
-                              )
-               )
-        { }
-    }
-    
-    enum MonsterType
-    {
-        Skeleton,
-        Spider,
-        Slime,
-        Knight,
-        Bat,
-        Ghost
-    }
-
-    struct ParsedMonster
-    {
-        public ParsedMonster(MonsterType type, Sector startSector)
-        {
-            Type = type;
-            StartSector = startSector;
-        }
- 
-        public MonsterType Type { get; }
-        public Sector StartSector { get; }
-    }
-
-    struct ParsedLevel
-    {
-        public ParsedLevel(int number, int gridWidth, int gridHeight, List<Block> blocks, List<ParsedMonster> monsters, Sector finishSector)
-        {
-            Number = number;
-            GridWidth = gridWidth;
-            GridHeight = gridHeight;
-            Blocks = blocks;
-            Monsters = monsters;
-            FinishSector = finishSector;
-        }
-
-        public int Number { get; }
-        public int GridWidth { get; }
-        public int GridHeight { get;  }
-        public List<Block> Blocks { get; }
-        public List<ParsedMonster> Monsters { get; }
-        public Sector FinishSector { get; }
-    }
-
     class LevelLoader
     {
         private readonly Dictionary<int, ParsedLevel> levels;
@@ -77,158 +21,107 @@ namespace Bomberman
         {
             Dictionary<int, ParsedLevel> levels = new Dictionary<int, ParsedLevel>();
 
+            ConfigReader configReader = new ConfigReader();
+            configReader.ReadTextFile(filename);
 
-            string[] lines = System.IO.File.ReadAllLines(filename);
-            
-            for (int lineNo = 0; lineNo < lines.Count(); ++lineNo)
+            for (int levelNumber = 1; configReader.HasNext(); ++levelNumber)
             {
-                ParsedLevel parsedLevel = ParseOneLevel(lines, ref lineNo);
+                ParsedLevel parsedLevel = ParseOneLevel(levelNumber, configReader);
                 levels[parsedLevel.Number] = parsedLevel;
             }
 
             return new LevelLoader(levels);
         }
 
-        private static ParsedLevel ParseOneLevel(string[] lines, ref int lineNo)
+        private static ParsedLevel ParseOneLevel(int levelNumber, ConfigReader configReader)
         {
-            LineShouldExistAndMatch(lines, lineNo, @"^LEVEL [0-9]{1,9}$");
-            string[] lineSplit = lines[lineNo].Split(null);
-            int number = int.Parse(lineSplit[1]);
+            configReader.AssertNext(@"^LEVEL " + levelNumber.ToString() + "$", out string line);
 
-            LineShouldExistAndMatch(lines, ++lineNo, @"^GRID [0-9]{1,9} [0-9]{1,9}$");
-            lineSplit = lines[lineNo].Split(null);
+            configReader.AssertNextSplit(@"^GRID [0-9]{1,9} [0-9]{1,9}$", out string[] lineSplit);
             int width = int.Parse(lineSplit[1]);
             int height = int.Parse(lineSplit[2]);
 
-            string gridLinePattern = @"^[0-2]{" + width.ToString() + "}$";
+            string gridLinePattern = @"^[012 ]{0," + width.ToString() + "}$";
             List<Block> blocks = new List<Block>();
             for (int lineIterator = 0; lineIterator < height; ++lineIterator)
             {
-                LineShouldExistAndMatch(lines, ++lineNo, gridLinePattern);
-                foreach (char blockCharacter in lines[lineNo])
+                configReader.AssertNext(gridLinePattern, out line);
+                for (int lineIter = 0; lineIter < width; ++lineIter)
                 {
-                    int blockNumber = blockCharacter - '0';
-                    blocks.Add((Block)blockNumber);
+                    if (lineIter < line.Count() && line[lineIter] != ' ')
+                    {
+                        char blockCharacter = line[lineIter];
+                        int blockNumber = blockCharacter - '0';
+                        blocks.Add((Block)blockNumber);
+                    }
+                    else
+                    {
+                        blocks.Add(Block.None);
+                    }
                 }
             }
+            Grid grid = new Grid(width, height, blocks);
 
-            LineShouldExistAndMatch(lines, ++lineNo, @"^FINISH [0-9]{1,9} [0-9]{1,9}$");
-            lineSplit = lines[lineNo].Split(null);
+            configReader.AssertNextSplit(@"^START [0-9]{1,9} [0-9]{1,9}$", out lineSplit);
+            Sector startSector = new Sector(int.Parse(lineSplit[1]), int.Parse(lineSplit[2]));
+
+            configReader.AssertNextSplit(@"^FINISH [0-9]{1,9} [0-9]{1,9}$", out lineSplit);
             Sector finishSector = new Sector(int.Parse(lineSplit[1]), int.Parse(lineSplit[2]));
  
-            LineShouldExistAndMatch(lines, ++lineNo, @"^MONSTERS [0-9]{1,9}$");
-            lineSplit = lines[lineNo].Split(null);
-            int monsterCount = int.Parse(lineSplit[1]);
-            List<ParsedMonster> monsters = new List<ParsedMonster>();
-            for (int monsterIterator = 0; monsterIterator < monsterCount; ++monsterIterator)
-            {
-                LineShouldExistAndMatch(lines, ++lineNo, @"[SKELETON|SPIDER|SLIME|KNIGHT|BAT|GHOST] [0-9]{1,9} [0-9]{1,9}$");
-                lineSplit = lines[lineNo].Split(null);
-                MonsterType type;
-                switch (lineSplit[0])
-                {
-                    case "SKELETON":
-                        type = MonsterType.Skeleton;
-                        break;
-                    case "SPIDER":
-                        type = MonsterType.Spider;
-                        break;
-                    case "SLIME":
-                        type = MonsterType.Slime;
-                        break;
-                    case "KNIGHT":
-                        type = MonsterType.Knight;
-                        break;
-                    case "BAT":
-                        type = MonsterType.Bat;
-                        break;
-                    case "GHOST":
-                        type = MonsterType.Ghost;
-                        break;
-                    default: // impossible
-                        type = MonsterType.Skeleton;
-                        break;
-                }
-                Sector sector = new Sector(int.Parse(lineSplit[1]), int.Parse(lineSplit[2]));
-                ParsedMonster parsedMonster = new ParsedMonster(type, sector);
-                monsters.Add(parsedMonster);
-            }
+            ParsedMonsters monsters = new ParsedMonsters();
+            monsters.Read(configReader);
 
-            return new ParsedLevel(number, width, height, blocks, monsters, finishSector);
+            Texts texts = new Texts();
+            texts.Read(configReader);
+
+            return new ParsedLevel(levelNumber, grid, monsters, startSector, finishSector, texts);
         }
 
-        private static void LineShouldExistAndMatch(string[] lines, int lineArrayIndex, string pattern)
+        public Grid GetGrid(int levelNumber)
         {
-            if (lines.Count() - lineArrayIndex <= 0)
-            {
-                throw new LevelParserException(lineArrayIndex + 1, pattern, "End of file.");
-            }
-
-            Regex rgx = new Regex(pattern);
-            if (!rgx.IsMatch(lines[lineArrayIndex]))
-            {
-                throw new LevelParserException(lineArrayIndex + 1, pattern, lines[lineArrayIndex]);
-            }
-        }
-
-        public Grid MakeGrid(int levelNumber)
-        {
-            if (!levels.ContainsKey(levelNumber))
-            {
-                throw new ArgumentException(string.Format("Tried to create grid for level {0:d}, but it was not parsed.", levelNumber));
-            }
-
-            ParsedLevel level = levels[levelNumber];
-            Grid grid = new Grid(level.GridWidth, level.GridHeight, level.Blocks);
-            return grid;
+            ParsedLevel level = GetParsedLevel(levelNumber);
+            return level.Grid;
         }
 
         public List<Actor> MakeMonsters(int levelNumber, Texture2D texture)
         {
-            if (!levels.ContainsKey(levelNumber))
-            {
-                throw new ArgumentException(string.Format("Tried to create monsters for level {0:d}, but it was not parsed.", levelNumber));
-            }
-
-            ParsedLevel level = levels[levelNumber];
-            List<Actor> monsterActors = new List<Actor>();
-
-            foreach (ParsedMonster monster in level.Monsters)
-            {
-                Actor monsterActor = null;
-
-                switch(monster.Type)
-                {
-                    case MonsterType.Skeleton:
-                        monsterActor = new Skeleton(texture, monster.StartSector);
-                        break;
-                    case MonsterType.Spider:
-                        monsterActor = new Spider(texture, monster.StartSector);
-                        break;
-                    default:
-                        monsterActor = new Spider(texture, monster.StartSector);
-                        break;
-                }
-     
-                if (monsterActor != null)
-                {
-                    monsterActors.Add(monsterActor);
-                }
-            }
-
-            return monsterActors;
+            ParsedLevel level = GetParsedLevel(levelNumber);
+            return level.Monsters.MakeMonsters(texture);
         }
 
         public Finish MakeFinish(int levelNumber, Texture2D texture)
         {
-            if (!levels.ContainsKey(levelNumber))
-            {
-                throw new ArgumentException(string.Format("Tried to create finish for level {0:d}, but it was not parsed.", levelNumber));
-            }
-
-            ParsedLevel level = levels[levelNumber];
+            ParsedLevel level = GetParsedLevel(levelNumber);
             Finish finish = new Finish(texture, level.FinishSector);
             return finish;
+        }
+
+        public Charactor MakeCharactor(int levelNumber, Texture2D texture)
+        {
+            ParsedLevel level = GetParsedLevel(levelNumber);
+            Charactor finish = new Charactor(texture, level.StartSector);
+            return finish;
+        }
+
+        public Texts GetTexts(int levelNumber)
+        {
+            ParsedLevel level = GetParsedLevel(levelNumber);
+            return level.Texts;
+        }
+
+        public int LevelCount()
+        {
+            return levels.Count;
+        }
+
+        private ParsedLevel GetParsedLevel(int levelNumber)
+        {
+            if (!levels.ContainsKey(levelNumber))
+            {
+                throw new ArgumentException(string.Format("Tried to load level {0:d}, but it was not parsed.", levelNumber));
+            }
+
+            return levels[levelNumber];
         }
     }
 }

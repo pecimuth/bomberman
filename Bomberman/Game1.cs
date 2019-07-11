@@ -11,18 +11,17 @@ namespace Bomberman
     /// </summary>
     public class Game1 : Game
     {
-        private static readonly float moonScrollCoefficient = 1 / 3f;
-        private static readonly float bgScrollCoefficient = 1 / 4f;
-        private static readonly Point moonSize = new Point(32, 32);
-        private static readonly Point moonOrigin = new Point(416, 0);
-        private static readonly Vector2 moonOffset = new Vector2(450, 70);
-
+        static readonly int firstLevel = 1;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
         Texture2D atlasTexture;
+        SpriteFont font;
+        Background background;
         World world;
+        Texts texts;
         StatusBar statusBar;
+        LevelLoader levelLoader;
 
         Vector2 Viewport
         {
@@ -61,11 +60,12 @@ namespace Bomberman
             spriteBatch = new SpriteBatch(GraphicsDevice);
             backgroundTexture = Content.Load<Texture2D>("stars");
             atlasTexture = Content.Load<Texture2D>("atlas");
-            LevelLoader levelLoader = LevelLoader.FromTextFile(@"Config\levels.txt");
-            world = new World(atlasTexture, levelLoader, 1);
+            levelLoader = LevelLoader.FromTextFile(@"Config\levels.txt");
+            font = Content.Load<SpriteFont>("font");
+            world = new World(atlasTexture, levelLoader, firstLevel);
+            texts = levelLoader.GetTexts(world.LevelNumber);
             statusBar = new StatusBar(atlasTexture);
-
-            // TODO: use this.Content to load your game content here
+            background = new Background(backgroundTexture, atlasTexture);
         }
 
         /// <summary>
@@ -87,9 +87,31 @@ namespace Bomberman
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            world.Update(Keyboard.GetState());
-            statusBar.Update(world);
+            if (world.LevelState == LevelState.InProgress)
+            {
+                world.Update(Keyboard.GetState());
+                statusBar.Update(world);
+            }
+            else if (world.LevelState == LevelState.Completed)
+            {
+                int nextLevel = world.LevelNumber + 1;
+                if (nextLevel > levelLoader.LevelCount())
+                {
+                    nextLevel = firstLevel;
+                }
+                world = new World(atlasTexture, levelLoader, nextLevel);
+                texts = levelLoader.GetTexts(world.LevelNumber);
+                world.Update(Keyboard.GetState());
+                statusBar.Update(world);
+            }
+            else if (world.LevelState == LevelState.Failed)
+            {
+                world = new World(atlasTexture, levelLoader, world.LevelNumber);
+                texts = levelLoader.GetTexts(world.LevelNumber);
+                world.Update(Keyboard.GetState());
+                statusBar.Update(world);
+            }
+
             base.Update(gameTime);
         }
 
@@ -99,9 +121,10 @@ namespace Bomberman
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
-            DrawBackground();
-            world.Draw(spriteBatch, MakeOffsetToCenterCharactor());
+            Vector2 charactorOffset = MakeOffsetToCenterCharactor();
+            background.Draw(spriteBatch, charactorOffset, Viewport);
+            world.Draw(spriteBatch, charactorOffset);
+            texts.Draw(spriteBatch, font, charactorOffset);
             statusBar.Draw(spriteBatch);
 
             base.Draw(gameTime);
@@ -110,22 +133,6 @@ namespace Bomberman
         private Vector2 MakeOffsetToCenterCharactor()
         {
             return (Viewport - AnimatedSprite.Size) / 2 - world.Charactor.Sprite.Location;
-        }
-
-        private void DrawBackground()
-        {
-            Vector2 scrollVector = MakeOffsetToCenterCharactor() * bgScrollCoefficient;
-            Rectangle source = new Rectangle(scrollVector.ToPoint(), Viewport.ToPoint());
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
-            spriteBatch.Draw(backgroundTexture, Vector2.Zero, source, Color.White);
-            spriteBatch.End();
-
-            Vector2 moonScrollVector = MakeOffsetToCenterCharactor() * moonScrollCoefficient;
-            Rectangle moonSource = new Rectangle(moonOrigin, moonSize);
-            Rectangle moonDestination = new Rectangle((moonScrollVector + moonOffset).ToPoint(), moonSize);
-            spriteBatch.Begin();
-            spriteBatch.Draw(atlasTexture, moonDestination, moonSource, Color.White);
-            spriteBatch.End();
         }
     }
 }
