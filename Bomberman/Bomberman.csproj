@@ -42,35 +42,36 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Actor.cs" />
-    <Compile Include="AnimatedSprite.cs" />
-    <Compile Include="Background.cs" />
-    <Compile Include="Bomb.cs" />
-    <Compile Include="Charactor.cs" />
-    <Compile Include="ChaseCharactorController.cs" />
-    <Compile Include="ConfigReader.cs" />
-    <Compile Include="Effect.cs" />
-    <Compile Include="Explosion.cs" />
-    <Compile Include="Finish.cs" />
+    <Compile Include="Audio.cs" />
+    <Compile Include="World\Actors\Actor.cs" />
+    <Compile Include="World\Actors\Sprite\AnimatedSprite.cs" />
+    <Compile Include="UI\Background.cs" />
+    <Compile Include="World\Effects\Bomb.cs" />
+    <Compile Include="World\Actors\Charactor.cs" />
+    <Compile Include="World\Actors\Controllers\ChaseCharactorController.cs" />
+    <Compile Include="Parser\ConfigReader.cs" />
+    <Compile Include="World\Effects\Effect.cs" />
+    <Compile Include="World\Effects\Explosion.cs" />
+    <Compile Include="World\Effects\Finish.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="Grid.cs" />
-    <Compile Include="Controller.cs" />
-    <Compile Include="LevelLoader.cs" />
-    <Compile Include="ParsedLevel.cs" />
-    <Compile Include="ParsedMonsters.cs" />
-    <Compile Include="Pickup.cs" />
-    <Compile Include="PlayerController.cs" />
+    <Compile Include="World\Grids\Grid.cs" />
+    <Compile Include="World\Actors\Controllers\Controller.cs" />
+    <Compile Include="Parser\LevelLoader.cs" />
+    <Compile Include="Parser\ParsedLevel.cs" />
+    <Compile Include="Parser\ParsedMonsters.cs" />
+    <Compile Include="World\Effects\Pickup.cs" />
+    <Compile Include="World\Actors\Controllers\PlayerController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sector.cs" />
-    <Compile Include="Skeleton.cs" />
-    <Compile Include="Spider.cs" />
-    <Compile Include="Stat.cs" />
-    <Compile Include="StatusBar.cs" />
-    <Compile Include="Texts.cs" />
-    <Compile Include="WalkByWallsController.cs" />
-    <Compile Include="WalkingSprite.cs" />
-    <Compile Include="World.cs" />
+    <Compile Include="World\Grids\Sector.cs" />
+    <Compile Include="World\Actors\Skeleton.cs" />
+    <Compile Include="World\Actors\Spider.cs" />
+    <Compile Include="World\Actors\Stat.cs" />
+    <Compile Include="UI\StatusBar.cs" />
+    <Compile Include="Parser\Texts.cs" />
+    <Compile Include="World\Actors\Controllers\WalkByWallsController.cs" />
+    <Compile Include="World\Actors\Sprite\WalkingSprite.cs" />
+    <Compile Include="World\World.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

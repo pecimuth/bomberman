@@ -1,4 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Bomberman.Parser;
+using Bomberman.UI;
+using Bomberman.World;
+using Bomberman.World.Actors.Sprite;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -14,11 +19,12 @@ namespace Bomberman
         static readonly int firstLevel = 1;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Audio audio;
         Texture2D backgroundTexture;
         Texture2D atlasTexture;
         SpriteFont font;
         Background background;
-        World world;
+        World.World world;
         Texts texts;
         StatusBar statusBar;
         LevelLoader levelLoader;
@@ -57,12 +63,18 @@ namespace Bomberman
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
+            audio = new Audio();
+            audio.Register(Sound.Drop, Content.Load<SoundEffect>("drop"));
+            audio.Register(Sound.Start, Content.Load<SoundEffect>("start"));
+            audio.Register(Sound.Explosion, Content.Load<SoundEffect>("explosion"));
+            audio.Register(Sound.Hurt, Content.Load<SoundEffect>("hurt"));
+            audio.Register(Sound.Pickup, Content.Load<SoundEffect>("pickup"));
             spriteBatch = new SpriteBatch(GraphicsDevice);
             backgroundTexture = Content.Load<Texture2D>("stars");
             atlasTexture = Content.Load<Texture2D>("atlas");
             levelLoader = LevelLoader.FromTextFile(@"Config\levels.txt");
             font = Content.Load<SpriteFont>("font");
-            world = new World(atlasTexture, levelLoader, firstLevel);
+            world = new World.World(audio, atlasTexture, levelLoader, firstLevel);
             texts = levelLoader.GetTexts(world.LevelNumber);
             statusBar = new StatusBar(atlasTexture);
             background = new Background(backgroundTexture, atlasTexture);
@@ -99,14 +111,14 @@ namespace Bomberman
                 {
                     nextLevel = firstLevel;
                 }
-                world = new World(atlasTexture, levelLoader, nextLevel);
+                world = new World.World(audio, atlasTexture, levelLoader, nextLevel);
                 texts = levelLoader.GetTexts(world.LevelNumber);
                 world.Update(Keyboard.GetState());
                 statusBar.Update(world);
             }
             else if (world.LevelState == LevelState.Failed)
             {
-                world = new World(atlasTexture, levelLoader, world.LevelNumber);
+                world = new World.World(audio, atlasTexture, levelLoader, world.LevelNumber);
                 texts = levelLoader.GetTexts(world.LevelNumber);
                 world.Update(Keyboard.GetState());
                 statusBar.Update(world);
