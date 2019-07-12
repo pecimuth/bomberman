@@ -19,10 +19,13 @@ namespace Bomberman.Parser
             Texts = texts;
         }
 
+        // číslo levelu
         public int Number { get; }
         public Grid Grid { get; }
         public ParsedMonsters Monsters { get; }
+        // kde sa objaví hráč na začiatku
         public Sector StartSector { get; }
+        // kde sa nachádza cieľ
         public Sector FinishSector { get; }
         public Texts Texts { get; }
     }

@@ -18,11 +18,13 @@ namespace Bomberman.Parser
         }
 
         public string Content { get; }
+        // ľavý horný roh
         public Sector Location { get; }
     }
 
     class Texts
     {
+        // tvar jedneho riadku konfigurácie
         public static readonly string DataRowRegex = @"^TEXT -?[0-9]{1,9} -?[0-9]{1,9} .*$";
         private readonly List<Text> texts;
 
@@ -31,6 +33,7 @@ namespace Bomberman.Parser
             texts = new List<Text>();
         }
 
+        // načíta 0 a viac riadkov konfigurácie v danom tvare
         public void Read(ConfigReader configReader)
         {
             while (configReader.NextSplit(DataRowRegex, out string[] lineSplit))
@@ -41,12 +44,14 @@ namespace Bomberman.Parser
             }
         }
 
+        // pridanie jedneho textu do zoznamu
         private void Add(string content, Sector location)
         {
             Text text = new Text(content, location);
             texts.Add(text);
         }
 
+        // nakreslí texty s písmom font, s posunutím offset
         public void Draw(SpriteBatch spriteBatch, SpriteFont font, Vector2 offset)
         {
             spriteBatch.Begin();

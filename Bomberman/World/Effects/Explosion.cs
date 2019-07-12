@@ -19,10 +19,13 @@ namespace Bomberman.World.Effects
 
     class Explosion : Effect
     {
+        // koľko Update kým sa zmaže
         private static readonly int ticksLeft = 20;
+        // ľavý horný roh v atlas.png prvého typu explózie
         private static readonly Vector2 originVector = new Vector2(32, 288);
         private readonly bool brokeBrick;
 
+        // texture je atlas, location kde sa vykreslí, brokeBrick = bola na mieste location tehla, ktorá sa rozbila?
         public Explosion(Texture2D texture, Sector location, ExplosionOrientation orientation, bool brokeBrick) :
             base(
                  texture
@@ -35,6 +38,7 @@ namespace Bomberman.World.Effects
             this.brokeBrick = brokeBrick;
         }
 
+        // výpočet pozície ľavého horného rohu v atlas.png podľa typu
         private static Point GetPointOfOrigin(ExplosionOrientation orientation)
         {
             Vector2 directionVector = new Vector2(Size.X, 0);
@@ -52,6 +56,7 @@ namespace Bomberman.World.Effects
             monster.Damage(world);
         }
 
+        // ak rozbil tehlu, tak sa možno spawne náhodný pickup v jeho mieste
         protected override void OnTimeRanOut(World world)
         {
             if (brokeBrick)

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Bomberman.World.Actors
 {
+    // spravuje nejakú hodnotu, ktorá má základnú hodnotu,
+    // minimálnu, maximálnu a dá sa navýšiť/znížiť
     class Stat
     {
         public Stat(int baseValue, int increment, int minValue, int maxValue)
@@ -16,11 +18,16 @@ namespace Bomberman.World.Actors
             MaxValue = maxValue;
             Value = baseValue;
         }
-
+        
+        // základná hodnota
         public int BaseValue { get; private set; }
+        // o koľko sa znízi/zvýši
         public int Increment { get; private set; }
+        // minimálna hodnota
         public int MinValue { get; private set; }
+        // maximálna hodnota
         public int MaxValue { get; private set; }
+        // súčasná hodnota
         public int Value { get; private set; }
 
         public void Increase()
@@ -35,6 +42,7 @@ namespace Bomberman.World.Actors
             Value = Math.Max(MinValue, Value);
         }
 
+        // reset na základnú hodnotu
         public void Reset()
         {
             Value = BaseValue;

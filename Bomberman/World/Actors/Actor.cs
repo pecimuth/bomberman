@@ -17,8 +17,12 @@ namespace Bomberman.World.Actors
         public WalkingSprite Sprite { get; private set; }
         Controller controller;
         public Stat Health { get; private set; }
+        // koľko Update() zostáva, kým je ešte nezraniteľný - vykresluje sa semi transparentne
         public Stat InvicibilityRemaining { get; private set; }
 
+        // startSector - kde sa objaví
+        // tickPerSector - poćet Update kým prejde jeden sektor (= MovementSpeed)
+        // baseHealth - aký má Health nazačiatku
         public Actor(Texture2D texture, Appearance appearance, Sector startSector, int ticksPerSector, Controller controller, int baseHealth = 1)
         {
             Sprite = new WalkingSprite(texture, appearance, startSector, ticksPerSector);
@@ -40,6 +44,7 @@ namespace Bomberman.World.Actors
             Sprite.Draw(spriteBatch, offset, semiTransparent);
         }
 
+        // Actor inkasuje zranenie, stane sa nachvíľu nezraniteľný
         public virtual void Damage(World world)
         {
             if (InvicibilityRemaining.Value == InvicibilityRemaining.MinValue)

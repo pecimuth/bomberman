@@ -11,6 +11,7 @@ namespace Bomberman.World.Actors.Controllers
 {
     class PlayerController : Controller
     {
+        // mapovanie tlačítkom klávesnice na orientáciu pohybu
         private static readonly Dictionary<Keys, Facing> keyToOrientation = new Dictionary<Keys, Facing>
         {
             [Keys.Up] = Facing.North,
@@ -19,8 +20,10 @@ namespace Bomberman.World.Actors.Controllers
             [Keys.Right] = Facing.East
         };
 
+        // minulý Update() bol medzerník stlačený?
         private bool spaceKeyWasDown = false;
 
+        // ovládanie pohybu klávesnicov a kladenie bomby
         public override void Update(KeyboardState keyboardState, Actor actor, World world)
         {
             Grid grid = world.Grid;
@@ -48,6 +51,7 @@ namespace Bomberman.World.Actors.Controllers
             }
         }
 
+        // skontroluje, či Charactor má dostupnú bombu, ak áno, položí ju pod neho
         private void MaybePlaceBomb(Actor actor, World world)
         {
             if (actor == world.Charactor && world.Charactor.BombsAvailable > 0)

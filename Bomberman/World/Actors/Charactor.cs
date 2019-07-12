@@ -13,10 +13,14 @@ namespace Bomberman.World.Actors
 {
     class Charactor : Actor
     {
+        // polomer dosahu explózie bomby v počte sektorov 
         public Stat BombRadius { get; private set; }
+        // koľko bomb može naraz položiť
         public Stat BombsCapacity { get; private set; }
+        // koľko bomb má práve dostupných na položenie
         private int bombsAvailable;
 
+        // dostupných bomb je maximálne toľko ako kapacita
         public int BombsAvailable
         {
             get
@@ -31,6 +35,7 @@ namespace Bomberman.World.Actors
             }
         }
 
+        // startSector - kde sa objaví nazačiatku
         public Charactor(Texture2D texture, Sector startSector) : base(texture, Appearance.Heroine, startSector, 23, new PlayerController(), 3)
         {
             BombRadius = new Stat(1, 1, 1, 6);
@@ -38,6 +43,7 @@ namespace Bomberman.World.Actors
             bombsAvailable = BombsCapacity.BaseValue;
         }
 
+        // zranenie Charactove - prehranie zvukového efektu a update stavu levelu navyše
         public override void Damage(World world)
         {
             base.Damage(world);

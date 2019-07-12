@@ -10,6 +10,8 @@ namespace Bomberman.World.Actors.Controllers
 {
     class ChaseCharactorController : Controller
     {
+        // keď vidí Charactor, ide za ním
+        // inak chodí rovno a keď to nie je možné, zatáča vľavo
         public override void Update(KeyboardState keyboardState, Actor actor, World world)
         {
             if (actor.Sprite.Moving)
@@ -34,6 +36,9 @@ namespace Bomberman.World.Actors.Controllers
             }
         }
 
+        // je sektor end viditeľný zo sektoru start?
+        // viditeľný znamená že je medzi nimi iba podľaha a nejakú súradnicu majú rovnaku
+        // vráti orientáciu smerom zo start do end
         private bool IsInLineOfSight(Sector start, Sector end, Grid grid, out Facing orientation)
         {
             orientation = Facing.West;

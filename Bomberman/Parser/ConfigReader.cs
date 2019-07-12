@@ -23,7 +23,9 @@ namespace Bomberman.Parser
 
     class ConfigReader
     {
+        // pole riadkov konfiguračnéhó súboru
         private string[] lines;
+        // index spracovaného riadku v poli lines
         private int lineNo;
 
         public ConfigReader()
@@ -32,12 +34,14 @@ namespace Bomberman.Parser
             lineNo = 0;
         }
 
+        // prečíta súbor, výstup si uloží
         public void ReadTextFile(string filename)
         {
             lines = System.IO.File.ReadAllLines(filename);
             lineNo = 0;
         }
 
+        // ak ďalší riadok vyhovuje patternu, vráti riadok do line a true, inak false
         public bool Next(string pattern, out string line)
         {
             if (!HasNext())
@@ -58,11 +62,13 @@ namespace Bomberman.Parser
             return false;
         }
 
+        // má riadok, ktorý ešte nevrátil?
         public bool HasNext()
         {
             return lineNo < lines.Count();
         }
 
+        // ako Next, akurát riadok hneď rozdelí poďla bielych znakov
         public bool NextSplit(string pattern, out string[] lineSplit)
         {
             bool result = Next(pattern, out string line);
@@ -70,6 +76,7 @@ namespace Bomberman.Parser
             return result;
         }
 
+        // ako NextSplit, ale keď sa riadok nezhoduje s patternom, vráti LevelParserException
         public void AssertNextSplit(string pattern, out string[] lineSplit)
         {
             bool result = NextSplit(pattern, out lineSplit);
@@ -79,6 +86,7 @@ namespace Bomberman.Parser
             }
         }
 
+        // ako Next, ale keď sa riadok nezhoduje s patternom, vráti LevelParserException
         public void AssertNext(string pattern, out string line)
         {
             bool result = Next(pattern, out line);

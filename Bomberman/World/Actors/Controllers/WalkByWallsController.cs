@@ -10,6 +10,7 @@ namespace Bomberman.World.Actors.Controllers
 {
     class WalkByWallsController : Controller
     {
+        // chodí vedľa stien
         public override void Update(KeyboardState keyboardState, Actor actor, World world)
         {
             if (actor.Sprite.Moving)

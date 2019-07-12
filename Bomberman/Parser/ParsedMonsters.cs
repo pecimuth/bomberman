@@ -28,11 +28,13 @@ namespace Bomberman.Parser
         }
 
         public MonsterType Type { get; }
+        // kde sa objaví nazačiatku
         public Sector StartSector { get; }
     }
 
     class ParsedMonsters
     {
+        // popisuje tvar jedneho riadku popisujúceho príšeru
         public static readonly string DataRowRegex = @"[SKELETON|SPIDER|SLIME|KNIGHT|BAT|GHOST] [0-9]{1,9} [0-9]{1,9}$";
         private readonly List<ParsedMonster> monsters;
 
@@ -41,6 +43,7 @@ namespace Bomberman.Parser
             monsters = new List<ParsedMonster>();
         }
 
+        // načítanie 0 a viac riadkov z konfigurácie popisujúcich príšery
         public void Read(ConfigReader configReader)
         {
             while (configReader.NextSplit(DataRowRegex, out string[] lineSplit))
@@ -51,6 +54,7 @@ namespace Bomberman.Parser
             }
         }
 
+        // rozliší typ príśeru z reťazca type a pridá ju do zoznamu
         private void Add(string type, Sector sector)
         {
             MonsterType monsterType;
@@ -83,6 +87,9 @@ namespace Bomberman.Parser
             monsters.Add(parsedMonster);
         }
 
+
+        // vytovrenie herných inštancií Actor z načítaných príšer
+        // texture je atlas.png
         public List<Actor> MakeMonsters(Texture2D texture)
         {
             List<Actor> monsterActors = new List<Actor>();

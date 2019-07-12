@@ -11,10 +11,12 @@ namespace Bomberman.World.Actors.Controllers
 {
     abstract class Controller
     {
+        // orientácie v poradí proti smeru hodinových ručičiek
         protected static readonly Facing[] orientationsCounterClockwise = new Facing[] { Facing.East, Facing.North, Facing.West, Facing.South };
 
         public abstract void Update(KeyboardState keyboardState, Actor actor, World world);
 
+        // keď je na cieľovom políčku podlaha, tak pohni sprite a vráť true, inak false
         protected bool MaybeWalk(World world, WalkingSprite sprite, Facing facing)
         {
             if (IsNeighborFloor(world, sprite.SectorLocation, facing))
@@ -30,6 +32,7 @@ namespace Bomberman.World.Actors.Controllers
             return false;
         }
 
+        // vypoćíta susedné políčko podľa orientácie, vráti či je to podlaha
         protected bool IsNeighborFloor(World world, Sector sector, Facing facing)
         {
             Sector destination = sector.Neighbor(facing);
@@ -37,6 +40,7 @@ namespace Bomberman.World.Actors.Controllers
             return world.Grid.IsFloor(destination) && !ContainsMovementRestrictingEffect(destination, world);
         }
 
+        // je na sektore nejaký efekt, ktorý má RestrictActorMovement rovný true?
         protected bool ContainsMovementRestrictingEffect(Sector sector, World world)
         {
             return world
@@ -45,6 +49,7 @@ namespace Bomberman.World.Actors.Controllers
                 .Exists((effect) => effect.RestrictActorMovement);
         }
 
+        // skús ísť rovno keď sa dá, inak vľavo a opakuj
         protected bool WalkForwardOrTurnLeft(WalkingSprite sprite, World world)
         {
             int forwardOrientationIndex = Array.IndexOf(orientationsCounterClockwise, sprite.Orientation);
@@ -60,6 +65,7 @@ namespace Bomberman.World.Actors.Controllers
             return false;
         }
 
+        // vráti novú orientáciu zrotovanú o 90 stupňov pravo
         protected Facing RotateRight(Facing facing)
         {
             int orientationIndex = Array.IndexOf(orientationsCounterClockwise, facing);
@@ -72,11 +78,13 @@ namespace Bomberman.World.Actors.Controllers
             return orientationsCounterClockwise[orientationIndex];
         }
 
+        // vráti orientáciu zrotovanú o 180 stupňov
         protected Facing Rotate180(Facing facing)
         {
             return RotateRight(RotateRight(facing));
         }
 
+        // sprite sa otočí o 180 stupňov keď kráča naproti efektu s ActorRestrictMovement == true
         protected void TurnBackIfWalkingTowardsObstacle(WalkingSprite sprite, World world)
         {
             if (sprite.Moving && ContainsMovementRestrictingEffect(sprite.DestinationSector, world))

@@ -20,9 +20,11 @@ namespace Bomberman.World.Effects
 
     class Pickup : Effect
     {
+        // kde sa pickup BombsCapacity nachádza v atlase
         private static readonly Vector2 originVector = new Vector2(0, 320);
         private readonly PickupType pickupType;
 
+        // texture je atlas.png
         public Pickup(Texture2D texture, Sector location, PickupType pickupType) :
             base(
                 texture
@@ -35,6 +37,8 @@ namespace Bomberman.World.Effects
             this.pickupType = pickupType;
         }
 
+
+        // vráti súradnice ľavého horného rohu v atlase poďla typu
         private static Point GetPointOfOrigin(PickupType pickupType)
         {
             Vector2 directionVector = new Vector2(Size.X, 0);
@@ -42,6 +46,7 @@ namespace Bomberman.World.Effects
             return resultVector.ToPoint();
         }
 
+        // zvýšenie/zníženie Stat-ov pri kolízii s hráčom. prehranie zvuku a zmazanie
         protected override void OnCharactorCollision(Charactor charactor, World world)
         {
             switch (pickupType)

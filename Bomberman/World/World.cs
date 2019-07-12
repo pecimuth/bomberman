@@ -30,11 +30,14 @@ namespace Bomberman.World
         public List<Effect> Effects { get; private set; }
         public LevelState LevelState;
         public readonly int LevelNumber;
+        // efekty ktoré čakajú na pridanie medzi efekty
         private readonly List<Effect> waitingEffects;
         private readonly Texture2D texture;
         private readonly Random random;
+        // inverzná pravdepodobnosť, že po rozbití tehly sa spawne pickup
         private static readonly int inversePickupSpawnProbability = 5;
 
+        // vytvorenie nového sveta pomocou levelLoadera v danom leveli levelNumber
         public World(Audio audio, Texture2D texture, LevelLoader levelLoader, int levelNumber)
         {
             Audio = audio;
@@ -52,6 +55,9 @@ namespace Bomberman.World
             Audio.Play(Sound.Start);
         }
 
+        // volanie Update metód všetkých efektov, príšer, charaktora
+        // zmazanie príšer, efektov
+        // riešenie kolízie príšera/Charactor
         public void Update(KeyboardState keyboardState)
         {
             Charactor.Update(keyboardState, this);
@@ -78,6 +84,7 @@ namespace Bomberman.World
             waitingEffects.Clear();
         }
 
+        // vykreslenie celého sveta s posunom
         public void Draw(SpriteBatch spriteBatch, Vector2 offset)
         {
             Grid.Draw(spriteBatch, offset);
@@ -92,6 +99,7 @@ namespace Bomberman.World
             }
         }
 
+        // ak je location podľaha, s nejakou pravdepodobnosťou sa tam spawne náhodný pickup
         public void MaybeSpawnRandomPickup(Sector location)
         {
             if (Grid.IsFloor(location) && random.Next(inversePickupSpawnProbability) == 0)
@@ -100,6 +108,7 @@ namespace Bomberman.World
             }
         }
 
+        // na location sa spawne náhodný pickup
         private void SpawnRandomPickup(Sector location)
         {
             Array types = Enum.GetValues(typeof(PickupType));
@@ -114,12 +123,14 @@ namespace Bomberman.World
             waitingEffects.Add(bomb);
         }
 
+        // na location sa spawne explózia s danou orientáciou, brokeBrick hovorí, či rozbila tehlu
         public void SpawnExplosion(Sector location, ExplosionOrientation orientation, bool brokeBrick)
         {
             Explosion explosion = new Explosion(texture, location, orientation, brokeBrick);
             waitingEffects.Add(explosion);
         }
 
+        // vráti zoznam príšer, ktorých stred je v danom sektore
         public List<Actor> MonstersInSector(Sector sector)
         {
             return Monsters

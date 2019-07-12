@@ -12,9 +12,11 @@ namespace Bomberman.World.Effects
 {
     class Bomb : Effect
     {
+        // počet Update kým exploduje
         private static readonly int ticksUntilExplosion = 100;
         private static readonly Point topLeftCornerInTextureAtlas = new Point(0, 288);
 
+        // polomer explózie
         public int ExplosionRadius { get; private set; }
 
         public Bomb(Texture2D texture, Sector location, int explosionRadius) :
@@ -29,6 +31,7 @@ namespace Bomberman.World.Effects
             ExplosionRadius = explosionRadius;
         }
 
+        // vytvorenie explózii, prehranie zvuku, rozbitie tehly
         protected override void OnTimeRanOut(World world)
         {
             world.Audio.Play(Sound.Explosion);
@@ -41,6 +44,7 @@ namespace Bomberman.World.Effects
             Remove();
         }
 
+        // vytvorenie explózii v jednom smere, (deltaX, deltaY) je smerový vektor kolmý na osy
         private void ExplosionsInDirection(int deltaX, int deltaY, ExplosionOrientation orientation, World world)
         {
             for (int i = 1; i <= ExplosionRadius; ++i)

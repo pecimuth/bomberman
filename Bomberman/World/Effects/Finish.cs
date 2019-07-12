@@ -12,7 +12,10 @@ namespace Bomberman.World.Effects
 {
     class Finish : Effect
     {
+        // ľavý horný roh v atlase
         private static readonly Point pointOfOrigin = new Point(96, 256);
+
+        // texture je atlas.png, location kde sa vykreslí
         public Finish(Texture2D texture, Sector location) :
             base(
                 texture
@@ -23,6 +26,7 @@ namespace Bomberman.World.Effects
             )
         { }
 
+        // pri kolízii s Charactorom je level ukončený
         protected override void OnCharactorCollision(Charactor charactor, World world)
         {
             if (charactor.Health.Value > charactor.Health.MinValue && world.LevelState == LevelState.InProgress)

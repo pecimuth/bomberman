@@ -13,6 +13,7 @@ namespace Bomberman.Parser
 {
     class LevelLoader
     {
+        // udržuje načítane levely, s ktorých sa dajú vytvárať potrebné inštancie objektov
         private readonly Dictionary<int, ParsedLevel> levels;
 
         private LevelLoader(Dictionary<int, ParsedLevel> levels)
@@ -20,6 +21,8 @@ namespace Bomberman.Parser
             this.levels = levels;
         }
 
+        // filename je cesta k súboru konfiguráciou
+        // z tohto súboru sa načítajú levely - vytvorí inštanciu LevelLoader
         public static LevelLoader FromTextFile(string filename)
         {
             Dictionary<int, ParsedLevel> levels = new Dictionary<int, ParsedLevel>();
@@ -36,6 +39,8 @@ namespace Bomberman.Parser
             return new LevelLoader(levels);
         }
 
+        // prečítanie jedneho levelu z konfiguračného súboru
+        // číslo levelu músi byť rovné levelNumber
         private static ParsedLevel ParseOneLevel(int levelNumber, ConfigReader configReader)
         {
             configReader.AssertNext(@"^LEVEL " + levelNumber.ToString() + "$", out string line);
@@ -79,6 +84,8 @@ namespace Bomberman.Parser
 
             return new ParsedLevel(levelNumber, grid, monsters, startSector, finishSector, texts);
         }
+
+        // ďalšie metódy slúžia na vytvorenie konkrétnych inštancií objektov do hry podľa konfigurácie
 
         public Grid GetGrid(int levelNumber)
         {

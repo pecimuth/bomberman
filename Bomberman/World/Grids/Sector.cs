@@ -19,6 +19,7 @@ namespace Bomberman.World.Grids
     {
         public readonly static Sector Zero = new Sector(0, 0);
         public readonly static Sector One = new Sector(1, 1);
+        // veľkosť sektoru
         public readonly static int Width = 32;
         public readonly static int Height = 32;
 
@@ -30,6 +31,7 @@ namespace Bomberman.World.Grids
             }
         }
 
+        // súradnice sektoru, indeované od 0
         public int X;
         public int Y;
 
@@ -39,16 +41,19 @@ namespace Bomberman.World.Grids
             Y = y;
         }
 
+        // vytvorí sa sektor, do ktorého patrí daný bod
         public static Sector FromVector(Vector2 vector)
         {
             return new Sector((int)vector.X / Width, (int)vector.Y / Height);
         }
 
+        // vráti ľavý horný roh sektoru
         public Vector2 ToVector()
         {
             return Size * new Vector2(X, Y);
         }
 
+        // vráti susedný sektor podľa orientácie
         public Sector Neighbor(Facing facing)
         {
             switch (facing)
@@ -66,11 +71,13 @@ namespace Bomberman.World.Grids
             }
         }
 
+        // rovnosť poďla zložiek
         public static bool operator ==(Sector right, Sector left)
         {
             return right.X == left.X && right.Y == left.Y;
         }
 
+        // nerovnosť po zložkách
         public static bool operator !=(Sector right, Sector left)
         {
             return !(right == left);

@@ -10,9 +10,12 @@ namespace Bomberman.UI
 {
     class Background
     {
+        // týmto koeficientom sa vynásobí posunutie Charactora
+        // vytvára to efekt hĺbky
         private static readonly float moonScrollCoefficient = 1 / 7f;
         private static readonly float bgScrollCoefficient = 1 / 10f;
         private static readonly Point moonSize = new Point(32, 32);
+        // kde sa moon nachádza v atlase
         private static readonly Point moonOrigin = new Point(416, 0);
         private static readonly Vector2 moonOffset = new Vector2(450, 70);
         private readonly Texture2D backgroundTexture;
@@ -24,6 +27,7 @@ namespace Bomberman.UI
             this.atlasTexture = atlasTexture;
         }
 
+        // viewport je veľkosť okna v ktorom sa zobrazuje hra
         public void Draw(SpriteBatch spriteBatch, Vector2 charactorOffset, Vector2 viewport)
         {
             Vector2 scrollVector = charactorOffset * bgScrollCoefficient;
