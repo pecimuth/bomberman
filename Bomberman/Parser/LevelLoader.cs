@@ -90,7 +90,7 @@ namespace Bomberman.Parser
         public Grid MakeGrid(int levelNumber)
         {
             ParsedLevel level = GetParsedLevel(levelNumber);
-            return new Grid(level.Grid.Width, level.Grid.Height, level.Grid.Blocks);
+            return new Grid(level.Grid.Width, level.Grid.Height, new List<Block>(level.Grid.Blocks));
         }
 
         public List<Actor> MakeMonsters(int levelNumber, Texture2D texture)
