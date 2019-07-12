@@ -23,7 +23,7 @@ namespace Bomberman.World.Grids
         // výška mriežky
         public int Height { get; }
         // bloky najprv prvý riadok zľava doprava, potom druhý riadok atď
-        private List<Block> blocks;
+        public List<Block> Blocks { get; private set; }
         // atlas
         public Texture2D Texture;
         // ľavý horný roh Block.Floor v atlase
@@ -33,13 +33,13 @@ namespace Bomberman.World.Grids
         {
             Width = width;
             Height = height;
-            this.blocks = blocks;
+            Blocks = blocks;
         }
 
         // čo sa nachádza v danom sektore
         public Block At(Sector sector)
         {
-            return blocks[sector.X + sector.Y * Width];
+            return Blocks[sector.X + sector.Y * Width];
         }
 
         // čo sa nachádza v danom sektore - zadané x, y sektoru
@@ -113,7 +113,7 @@ namespace Bomberman.World.Grids
         // zmena typu bloku v danom sektore
         private void Set(Sector sector, Block block)
         {
-            blocks[sector.X + sector.Y * Width] = block;
+            Blocks[sector.X + sector.Y * Width] = block;
         }
     }
 }

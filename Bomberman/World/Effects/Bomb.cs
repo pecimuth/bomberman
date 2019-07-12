@@ -13,7 +13,7 @@ namespace Bomberman.World.Effects
     class Bomb : Effect
     {
         // počet Update kým exploduje
-        private static readonly int ticksUntilExplosion = 100;
+        private static readonly int ticksUntilExplosion = 130;
         private static readonly Point topLeftCornerInTextureAtlas = new Point(0, 288);
 
         // polomer explózie

@@ -87,10 +87,10 @@ namespace Bomberman.Parser
 
         // ďalšie metódy slúžia na vytvorenie konkrétnych inštancií objektov do hry podľa konfigurácie
 
-        public Grid GetGrid(int levelNumber)
+        public Grid MakeGrid(int levelNumber)
         {
             ParsedLevel level = GetParsedLevel(levelNumber);
-            return level.Grid;
+            return new Grid(level.Grid.Width, level.Grid.Height, level.Grid.Blocks);
         }
 
         public List<Actor> MakeMonsters(int levelNumber, Texture2D texture)

@@ -12,6 +12,8 @@ namespace Bomberman.World.Actors
 {
     class Spider : Actor
     {
+        // dosadí parametre Spidera konštruktoru Actor
+        // texture je atlas, startSector kde sa objaví
         public Spider(Texture2D texture, Sector startSector) : base(texture, Appearance.Spider, startSector, 70, new WalkByWallsController())
         { }
     }

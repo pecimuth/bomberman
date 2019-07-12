@@ -43,7 +43,7 @@ namespace Bomberman.World
             Audio = audio;
             this.texture = texture;
             Charactor = levelLoader.MakeCharactor(levelNumber, texture);
-            Grid = levelLoader.GetGrid(levelNumber);
+            Grid = levelLoader.MakeGrid(levelNumber);
             Grid.Texture = texture;
             Monsters = levelLoader.MakeMonsters(levelNumber, texture);
             Effects = new List<Effect>();
