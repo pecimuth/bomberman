@@ -1,0 +1,9 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/atlas.png","C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/bin/DesktopGL/Content/atlas.xnb","TextureProcessor","Texture2DContent",43988,921685,0.1505934
+"C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/drop.wav","C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/bin/DesktopGL/Content/drop.xnb","SoundEffectProcessor","SoundEffectContent",20390,20451,0.8566801
+"C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/explosion.wav","C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/bin/DesktopGL/Content/explosion.xnb","SoundEffectProcessor","SoundEffectContent",53858,53919,0.2940899
+"C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/font.spritefont","C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/bin/DesktopGL/Content/font.xnb","FontDescriptionProcessor","SpriteFontContent",2008,70673,0.5612024
+"C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/hurt.wav","C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/bin/DesktopGL/Content/hurt.xnb","SoundEffectProcessor","SoundEffectContent",37038,37099,0.2907845
+"C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/pickup.wav","C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/bin/DesktopGL/Content/pickup.xnb","SoundEffectProcessor","SoundEffectContent",18622,18683,0.2840858
+"C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/stars.png","C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/bin/DesktopGL/Content/stars.xnb","TextureProcessor","Texture2DContent",486,24661,0.1226716
+"C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/start.wav","C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/bin/DesktopGL/Content/start.xnb","SoundEffectProcessor","SoundEffectContent",46544,46605,0.2923168

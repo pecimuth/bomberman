@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/atlas.png</File>
+    <File>C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/drop.wav</File>
+    <File>C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/explosion.wav</File>
+    <File>C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/font.spritefont</File>
+    <File>C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/hurt.wav</File>
+    <File>C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/pickup.wav</File>
+    <File>C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/stars.png</File>
+    <File>C:/Users/Andrej/source/repos/Bomberman/Bomberman/Content/start.wav</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
